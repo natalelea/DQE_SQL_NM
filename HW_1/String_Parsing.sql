@@ -38,7 +38,7 @@ WITH json_string AS
 		FROM some_transformations3
 	),
 
-	some_transformations5 AS
+	parsed_data AS
 	(
 		SELECT cast([employee_id] as BIGINT) as [employee_id],
 			   iif([department_id]= '', NULL, cast([department_id] as INT)) as [department_id]
@@ -47,6 +47,5 @@ WITH json_string AS
 	
 
 SELECT [employee_id], [department_id]
-FROM some_transformations5 ;
-
+FROM parsed_data ;
 
