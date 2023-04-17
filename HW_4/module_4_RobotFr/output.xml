@@ -1,0 +1,209 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<robot generator="Robot 6.0.2 (Python 3.11.3 on win32)" generated="20230417 23:13:15.535" rpa="false" schemaversion="3">
+<suite id="s1" name="Test MSSQL" source="C:\Users\Nataliia_Maltseva\PycharmProjects\Module_4_RobotFr\DB_Testing\tests\Test_MSSQL.robot">
+<kw name="Connect To Database Using Custom Params" library="DatabaseLibrary" type="SETUP">
+<arg>pymssql</arg>
+<arg>host=${DBHost}, port=${DBPort}, user=${DBUser}, password=${DBPass}, database=${DBName}</arg>
+<doc>Loads the DB API 2.0 module given `dbapiModuleName` then uses it to
+connect to the database using the map string `db_custom_param_string`.</doc>
+<msg timestamp="20230417 23:13:15.623" level="INFO">Executing : Connect To Database Using Custom Params : pymssql.connect(db_api_2.connect(host='EPUALVIW08B4\SQLEXPRESS01', port='1433', user='TestLogin', password='123Password!', database='TRN')) </msg>
+<status status="PASS" starttime="20230417 23:13:15.603" endtime="20230417 23:13:15.884"/>
+</kw>
+<test id="s1-t1" name="Check Max Salary Value" line="14">
+<kw name="Query" library="DatabaseLibrary">
+<var>${output}</var>
+<arg>SELECT max([salary]) FROM [TRN].[hr].[employees]</arg>
+<doc>Uses the input `selectStatement` to query for the values that will be returned as a list of tuples. Set optional
+input `sansTran` to True to run command without an explicit transaction commit or rollback.
+Set optional input `returnAsDict` to True to return values as a list of dictionaries.</doc>
+<msg timestamp="20230417 23:13:15.888" level="INFO">Executing : Query  |  SELECT max([salary]) FROM [TRN].[hr].[employees] </msg>
+<msg timestamp="20230417 23:13:15.901" level="INFO">${output} = [(Decimal('24000.00'),)]</msg>
+<status status="PASS" starttime="20230417 23:13:15.887" endtime="20230417 23:13:15.902"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>${output}</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230417 23:13:15.904" level="INFO">[(Decimal('24000.00'),)]</msg>
+<status status="PASS" starttime="20230417 23:13:15.903" endtime="20230417 23:13:15.904"/>
+</kw>
+<kw name="Should Be Equal As Strings" library="BuiltIn">
+<arg>${output}</arg>
+<arg>[(Decimal('24000.00'),)]</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<msg timestamp="20230417 23:13:15.906" level="INFO">Argument types are:
+&lt;class 'list'&gt;
+&lt;class 'str'&gt;</msg>
+<status status="PASS" starttime="20230417 23:13:15.905" endtime="20230417 23:13:15.906"/>
+</kw>
+<doc>| Name: Verifying if salary range is eligible
+| Steps: 1. Getting maximum value of [salary] column from [hr].[employees]
+| 2. Comparing if the result value is in expected range which is less then 50K
+| Expected result: 24000.00</doc>
+<status status="PASS" starttime="20230417 23:13:15.885" endtime="20230417 23:13:15.908"/>
+</test>
+<test id="s1-t2" name="Check Duplicates - Employees tbl" line="24">
+<kw name="Row Count Is 0" library="DatabaseLibrary">
+<arg>SELECT [first_name],[last_name] FROM [TRN].[hr].[employees] GROUP BY [first_name],[last_name] HAVING COUNT(*) &gt; 1</arg>
+<doc>Check if any rows are returned from the submitted `selectStatement`. If there are, then this will throw an
+AssertionError. Set optional input `sansTran` to True to run command without an explicit transaction commit or
+rollback.</doc>
+<msg timestamp="20230417 23:13:15.915" level="INFO">Executing : Row Count Is 0  |  SELECT [first_name],[last_name] FROM [TRN].[hr].[employees] GROUP BY [first_name],[last_name] HAVING COUNT(*) &gt; 1 </msg>
+<msg timestamp="20230417 23:13:15.915" level="INFO">Executing : Row Count  |  SELECT [first_name],[last_name] FROM [TRN].[hr].[employees] GROUP BY [first_name],[last_name] HAVING COUNT(*) &gt; 1 </msg>
+<status status="PASS" starttime="20230417 23:13:15.914" endtime="20230417 23:13:15.922"/>
+</kw>
+<doc>| Name: Verifying duplicates by employee's name are not present in employees table
+| Steps: 1. Getting values of the columns [first_name],[last_name] from [hr].[employees] table
+| that are present in table more that once
+| 2. Checking if the result set is empty
+| Expected result: No records are returned</doc>
+<status status="PASS" starttime="20230417 23:13:15.911" endtime="20230417 23:13:15.923"/>
+</test>
+<test id="s1-t3" name="Check Count for Managers" line="33">
+<kw name="Query" library="DatabaseLibrary">
+<var>${output}</var>
+<arg>SELECT COUNT(*) FROM [TRN].[hr].[jobs] WHERE job_title like '%Manager%';</arg>
+<doc>Uses the input `selectStatement` to query for the values that will be returned as a list of tuples. Set optional
+input `sansTran` to True to run command without an explicit transaction commit or rollback.
+Set optional input `returnAsDict` to True to return values as a list of dictionaries.</doc>
+<msg timestamp="20230417 23:13:15.931" level="INFO">Executing : Query  |  SELECT COUNT(*) FROM [TRN].[hr].[jobs] WHERE job_title like '%Manager%'; </msg>
+<msg timestamp="20230417 23:13:15.938" level="INFO">${output} = [(6,)]</msg>
+<status status="PASS" starttime="20230417 23:13:15.930" endtime="20230417 23:13:15.938"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>${output}</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230417 23:13:15.940" level="INFO">[(6,)]</msg>
+<status status="PASS" starttime="20230417 23:13:15.940" endtime="20230417 23:13:15.941"/>
+</kw>
+<kw name="Should Be Equal As Strings" library="BuiltIn">
+<arg>${output}</arg>
+<arg>[(6,)]</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<msg timestamp="20230417 23:13:15.943" level="INFO">Argument types are:
+&lt;class 'list'&gt;
+&lt;class 'str'&gt;</msg>
+<status status="PASS" starttime="20230417 23:13:15.942" endtime="20230417 23:13:15.943"/>
+</kw>
+<doc>| Name: Verifying count of job titles containing 'Manager' in the name
+| Steps: 1. Getting count of rows from [hr].[jobs] table which have any Manager [job_title] value
+| 2. Checking if the result value equals to expected count
+| Expected result: 6</doc>
+<status status="PASS" starttime="20230417 23:13:15.926" endtime="20230417 23:13:15.944"/>
+</test>
+<test id="s1-t4" name="Check Country Values" line="43">
+<kw name="Query" library="DatabaseLibrary">
+<var>${output}</var>
+<arg>SELECT DISTINCT [country_id] FROM [TRN].[hr].[locations] ORDER BY [country_id]</arg>
+<doc>Uses the input `selectStatement` to query for the values that will be returned as a list of tuples. Set optional
+input `sansTran` to True to run command without an explicit transaction commit or rollback.
+Set optional input `returnAsDict` to True to return values as a list of dictionaries.</doc>
+<msg timestamp="20230417 23:13:15.951" level="INFO">Executing : Query  |  SELECT DISTINCT [country_id] FROM [TRN].[hr].[locations] ORDER BY [country_id] </msg>
+<msg timestamp="20230417 23:13:15.959" level="INFO">${output} = [('CA',), ('DE',), ('UK',), ('US',)]</msg>
+<status status="PASS" starttime="20230417 23:13:15.950" endtime="20230417 23:13:15.960"/>
+</kw>
+<kw name="Log Many" library="BuiltIn">
+<arg>${output}</arg>
+<doc>Logs the given messages as separate entries using the INFO level.</doc>
+<msg timestamp="20230417 23:13:15.961" level="INFO">[('CA',), ('DE',), ('UK',), ('US',)]</msg>
+<status status="PASS" starttime="20230417 23:13:15.961" endtime="20230417 23:13:15.962"/>
+</kw>
+<kw name="Should Be Equal As Strings" library="BuiltIn">
+<arg>${output}</arg>
+<arg>[('CA',), ('DE',), ('UK',), ('US',)]</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<msg timestamp="20230417 23:13:15.964" level="INFO">Argument types are:
+&lt;class 'list'&gt;
+&lt;class 'str'&gt;</msg>
+<status status="PASS" starttime="20230417 23:13:15.963" endtime="20230417 23:13:15.964"/>
+</kw>
+<doc>| Name: Verifying countries from locations table
+| Steps: 1. Getting unique values of [country_id] column from [hr].[locations] table
+| 2. Checking if the result set equals to expected list of values
+| Expected result: 'CA', 'DE', 'UK', 'US'</doc>
+<status status="PASS" starttime="20230417 23:13:15.948" endtime="20230417 23:13:15.965"/>
+</test>
+<test id="s1-t5" name="Check Duplicates - Departments tbl" line="53">
+<kw name="Query" library="DatabaseLibrary">
+<var>${output}</var>
+<arg>SELECT COUNT([department_name]) as cnt_all, COUNT(distinct department_name) as cnt_unq FROM [TRN].[hr].[departments]</arg>
+<doc>Uses the input `selectStatement` to query for the values that will be returned as a list of tuples. Set optional
+input `sansTran` to True to run command without an explicit transaction commit or rollback.
+Set optional input `returnAsDict` to True to return values as a list of dictionaries.</doc>
+<msg timestamp="20230417 23:13:15.973" level="INFO">Executing : Query  |  SELECT COUNT([department_name]) as cnt_all, COUNT(distinct department_name) as cnt_unq FROM [TRN].[hr].[departments] </msg>
+<msg timestamp="20230417 23:13:15.983" level="INFO">${output} = [(11, 11)]</msg>
+<status status="PASS" starttime="20230417 23:13:15.972" endtime="20230417 23:13:15.983"/>
+</kw>
+<kw name="Log Many" library="BuiltIn">
+<arg>${output}</arg>
+<doc>Logs the given messages as separate entries using the INFO level.</doc>
+<msg timestamp="20230417 23:13:15.985" level="INFO">[(11, 11)]</msg>
+<status status="PASS" starttime="20230417 23:13:15.984" endtime="20230417 23:13:15.985"/>
+</kw>
+<kw name="Should Be Equal As Strings" library="BuiltIn">
+<arg>${output[0][0]}</arg>
+<arg>${output[0][1]}</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<status status="PASS" starttime="20230417 23:13:15.987" endtime="20230417 23:13:15.990"/>
+</kw>
+<doc>| Name: Verifying count of unique names for departments
+| Steps: 1. Getting count of non-empty values of [department_name] column from [hr].[departments] table
+| 2. Getting count of unique values of [department_name] column from [hr].[departments] table
+| 3. Checking if count of unique departments' values in the departments table
+| is equal to general count of departments' values
+| Expected result: Counts are equal</doc>
+<status status="PASS" starttime="20230417 23:13:15.969" endtime="20230417 23:13:15.992"/>
+</test>
+<test id="s1-t6" name="Check Average Salary Value" line="65">
+<kw name="Query" library="DatabaseLibrary">
+<var>${output}</var>
+<arg>SELECT AVG([salary]) as avg_salary FROM [TRN].[hr].[employees] WHERE [manager_id] = (SELECT [employee_id] FROM [TRN].[hr].[employees] WHERE [first_name] = 'Steven' and [last_name] = 'King')</arg>
+<doc>Uses the input `selectStatement` to query for the values that will be returned as a list of tuples. Set optional
+input `sansTran` to True to run command without an explicit transaction commit or rollback.
+Set optional input `returnAsDict` to True to return values as a list of dictionaries.</doc>
+<msg timestamp="20230417 23:13:16.000" level="INFO">Executing : Query  |  SELECT AVG([salary]) as avg_salary FROM [TRN].[hr].[employees] WHERE [manager_id] = (SELECT [employee_id] FROM [TRN].[hr].[employees] WHERE [first_name] = 'Steven' and [last_name] = 'King') </msg>
+<msg timestamp="20230417 23:13:16.009" level="INFO">${output} = [(Decimal('10450.000000'),)]</msg>
+<status status="PASS" starttime="20230417 23:13:15.999" endtime="20230417 23:13:16.009"/>
+</kw>
+<kw name="Log" library="BuiltIn">
+<arg>${output}</arg>
+<doc>Logs the given message with the given level.</doc>
+<msg timestamp="20230417 23:13:16.011" level="INFO">[(Decimal('10450.000000'),)]</msg>
+<status status="PASS" starttime="20230417 23:13:16.011" endtime="20230417 23:13:16.012"/>
+</kw>
+<kw name="Should Be Equal As Strings" library="BuiltIn">
+<arg>${output}</arg>
+<arg>[(Decimal('10450.000000'),)]</arg>
+<doc>Fails if objects are unequal after converting them to strings.</doc>
+<msg timestamp="20230417 23:13:16.015" level="INFO">Argument types are:
+&lt;class 'list'&gt;
+&lt;class 'str'&gt;</msg>
+<status status="PASS" starttime="20230417 23:13:16.014" endtime="20230417 23:13:16.015"/>
+</kw>
+<doc>| Name: Verifying average salary value for employees having Steven King for manager
+| Steps: 1. Getting records from [TRN].[hr].[employees] table where manager for current
+| employee is Steven King
+| 2. Getting average value of the [salary] column for data from the returned set
+| 3. Checking if the result value is equal to expected value
+| Expected result: 10450.00</doc>
+<status status="PASS" starttime="20230417 23:13:15.995" endtime="20230417 23:13:16.016"/>
+</test>
+<kw name="Disconnect From Database" library="DatabaseLibrary" type="TEARDOWN">
+<doc>Disconnects from the database.</doc>
+<msg timestamp="20230417 23:13:16.021" level="INFO">Executing : Disconnect From Database</msg>
+<status status="PASS" starttime="20230417 23:13:16.021" endtime="20230417 23:13:16.022"/>
+</kw>
+<status status="PASS" starttime="20230417 23:13:15.537" endtime="20230417 23:13:16.022"/>
+</suite>
+<statistics>
+<total>
+<stat pass="6" fail="0" skip="0">All Tests</stat>
+</total>
+<tag>
+</tag>
+<suite>
+<stat pass="6" fail="0" skip="0" id="s1" name="Test MSSQL">Test MSSQL</stat>
+</suite>
+</statistics>
+<errors>
+</errors>
+</robot>
